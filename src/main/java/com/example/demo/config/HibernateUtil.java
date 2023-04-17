@@ -1,9 +1,13 @@
 package com.example.demo.config;
 
 import com.example.demo.entities.CustomersEntity;
-import com.example.demo.entities.Employee;
+import com.example.demo.entities.tableHierachy.TPH_Employee;
+import com.example.demo.entities.tableHierachy.TPH_Person;
+import com.example.demo.entities.tablePerConcret.Employee;
 import com.example.demo.entities.OrdersEntity;
-import com.example.demo.entities.Person;
+import com.example.demo.entities.tablePerConcret.Person;
+import com.example.demo.entities.tablePerSubClass.TPS_Employee;
+import com.example.demo.entities.tablePerSubClass.TPS_Person;
 import com.example.demo.repositories.AbstractRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -39,6 +43,10 @@ public class HibernateUtil {
         configure.addAnnotatedClass(OrdersEntity.class);
         configure.addAnnotatedClass(Person.class);
         configure.addAnnotatedClass(Employee.class);
+        configure.addAnnotatedClass(TPH_Employee.class);
+        configure.addAnnotatedClass(TPH_Person.class);
+        configure.addAnnotatedClass(TPS_Employee.class);
+        configure.addAnnotatedClass(TPS_Person.class);
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
@@ -58,18 +66,54 @@ public class HibernateUtil {
     }
 
     public static void main(String[] args) {
+        testTPS();
+    }
+
+    public static void testTPC(){
         AbstractRepository abstractRepository = new AbstractRepository();
 
         Person person = new Person();
-        person.setId(1L);
-        person.setName("person");
+        person.setId(2L);
+        person.setName("tpc person");
 
         Employee employee = new Employee();
-        employee.setId(1L);
+        employee.setId(2L);
         employee.setSalary("1111");
-        employee.setName("employee");
+        employee.setName("tpc employee");
+
+        abstractRepository.save(employee);
+        abstractRepository.save(person);
+    }
+
+    public static void testTPH(){
+        AbstractRepository abstractRepository = new AbstractRepository();
+
+        TPH_Person person = new TPH_Person();
+        person.setId(2L);
+        person.setName("tpc person");
+
+        TPH_Employee employee = new TPH_Employee();
+        employee.setId(3L);
+        employee.setSalary("1111");
+        employee.setName("tpc employee");
 
         abstractRepository.save(person);
         abstractRepository.save(employee);
+    }
+
+    public static void testTPS(){
+        AbstractRepository abstractRepository = new AbstractRepository();
+
+        TPS_Person person = new TPS_Person();
+        person.setId(20L);
+        person.setName("tpc person");
+
+        TPS_Employee employee = new TPS_Employee();
+        employee.setId(20L);
+        employee.setSalary("1111");
+        employee.setName("tpc employee");
+
+        abstractRepository.save(employee);
+        abstractRepository.save(person);
     }
 }
