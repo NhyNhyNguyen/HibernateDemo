@@ -1,10 +1,10 @@
 package com.example.demo.config;
 
 import com.example.demo.entities.CustomersEntity;
+import com.example.demo.entities.Employee;
 import com.example.demo.entities.OrdersEntity;
-import com.example.demo.entities.Test;
-import com.example.demo.repositories.CustomerRepository;
-import com.example.demo.repositories.TestRepository;
+import com.example.demo.entities.Person;
+import com.example.demo.repositories.AbstractRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -37,7 +37,8 @@ public class HibernateUtil {
 
         configure.addAnnotatedClass(CustomersEntity.class);
         configure.addAnnotatedClass(OrdersEntity.class);
-        configure.addAnnotatedClass(Test.class);
+        configure.addAnnotatedClass(Person.class);
+        configure.addAnnotatedClass(Employee.class);
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
@@ -57,20 +58,18 @@ public class HibernateUtil {
     }
 
     public static void main(String[] args) {
-        CustomerRepository customerRepository = new CustomerRepository();
+        AbstractRepository abstractRepository = new AbstractRepository();
 
-        CustomersEntity entity = new CustomersEntity();
-        entity.setName("icon");
+        Person person = new Person();
+        person.setId(1L);
+        person.setName("person");
 
-        customerRepository.save(entity);
+        Employee employee = new Employee();
+        employee.setId(1L);
+        employee.setSalary("1111");
+        employee.setName("employee");
 
-        TestRepository testRepository = new TestRepository();
-        Test test = new Test();
-
-        test.setId(22);
-        test.setName("1111");
-
-        testRepository.save(test);
-        System.out.println(entity);
+        abstractRepository.save(person);
+        abstractRepository.save(employee);
     }
 }

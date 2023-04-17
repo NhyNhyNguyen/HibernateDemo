@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "TEST", schema = "DEMO", catalog = "")
-public class Test {
+@Table(name = "PERSON", schema = "DEMO", catalog = "")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Person {
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
     private long id;
@@ -16,10 +17,10 @@ public class Test {
     @Transient
     private List<String> data;
 
-    public Test() {
+    public Person() {
     }
 
-    public Test(long id, String name, List<String> data) {
+    public Person(long id, String name, List<String> data) {
         this.id = id;
         this.name = name;
         this.data = data;
