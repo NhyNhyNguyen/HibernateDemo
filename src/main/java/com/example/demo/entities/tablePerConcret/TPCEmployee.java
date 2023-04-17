@@ -10,15 +10,15 @@ import java.util.List;
         @AttributeOverride(name="id", column=@Column(name="id")),
         @AttributeOverride(name="name", column=@Column(name="name"))
 })
-public class Employee extends Person{
+public class TPCEmployee extends TPCPerson {
     private String salary;
 
-    public Employee(long id, String name, List<String> data, String salary) {
+    public TPCEmployee(long id, String name, List<String> data, String salary) {
         super(id, name, data);
         this.salary = salary;
     }
 
-    public Employee() {
+    public TPCEmployee() {
 
     }
 

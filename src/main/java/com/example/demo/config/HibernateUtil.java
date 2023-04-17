@@ -3,9 +3,9 @@ package com.example.demo.config;
 import com.example.demo.entities.CustomersEntity;
 import com.example.demo.entities.tableHierachy.TPH_Employee;
 import com.example.demo.entities.tableHierachy.TPH_Person;
-import com.example.demo.entities.tablePerConcret.Employee;
+import com.example.demo.entities.tablePerConcret.TPCEmployee;
 import com.example.demo.entities.OrdersEntity;
-import com.example.demo.entities.tablePerConcret.Person;
+import com.example.demo.entities.tablePerConcret.TPCPerson;
 import com.example.demo.entities.tablePerSubClass.TPS_Employee;
 import com.example.demo.entities.tablePerSubClass.TPS_Person;
 import com.example.demo.repositories.AbstractRepository;
@@ -41,8 +41,8 @@ public class HibernateUtil {
 
         configure.addAnnotatedClass(CustomersEntity.class);
         configure.addAnnotatedClass(OrdersEntity.class);
-        configure.addAnnotatedClass(Person.class);
-        configure.addAnnotatedClass(Employee.class);
+        configure.addAnnotatedClass(TPCPerson.class);
+        configure.addAnnotatedClass(TPCEmployee.class);
         configure.addAnnotatedClass(TPH_Employee.class);
         configure.addAnnotatedClass(TPH_Person.class);
         configure.addAnnotatedClass(TPS_Employee.class);
@@ -72,17 +72,17 @@ public class HibernateUtil {
     public static void testTPC(){
         AbstractRepository abstractRepository = new AbstractRepository();
 
-        Person person = new Person();
-        person.setId(2L);
-        person.setName("tpc person");
+        TPCPerson TPCPerson = new TPCPerson();
+        TPCPerson.setId(2L);
+        TPCPerson.setName("tpc person");
 
-        Employee employee = new Employee();
-        employee.setId(2L);
-        employee.setSalary("1111");
-        employee.setName("tpc employee");
+        TPCEmployee TPCEmployee = new TPCEmployee();
+        TPCEmployee.setId(2L);
+        TPCEmployee.setSalary("1111");
+        TPCEmployee.setName("tpc employee");
 
-        abstractRepository.save(employee);
-        abstractRepository.save(person);
+        abstractRepository.save(TPCEmployee);
+        abstractRepository.save(TPCPerson);
     }
 
     public static void testTPH(){
@@ -105,15 +105,15 @@ public class HibernateUtil {
         AbstractRepository abstractRepository = new AbstractRepository();
 
         TPS_Person person = new TPS_Person();
-        person.setId(20L);
-        person.setName("tpc person");
+        person.setId(7L);
+        person.setName("tps person");
 
         TPS_Employee employee = new TPS_Employee();
-        employee.setId(20L);
+        employee.setId(8L);
         employee.setSalary("1111");
-        employee.setName("tpc employee");
+        employee.setName("tps employee");
 
-        abstractRepository.save(employee);
         abstractRepository.save(person);
+        abstractRepository.save(employee);
     }
 }

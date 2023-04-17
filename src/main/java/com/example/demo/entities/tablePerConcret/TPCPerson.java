@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 @Table(name = "PERSON", schema = "DEMO", catalog = "")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Person {
+public class TPCPerson {
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
     private long id;
@@ -17,10 +17,10 @@ public class Person {
     @Transient
     private List<String> data;
 
-    public Person() {
+    public TPCPerson() {
     }
 
-    public Person(long id, String name, List<String> data) {
+    public TPCPerson(long id, String name, List<String> data) {
         this.id = id;
         this.name = name;
         this.data = data;
