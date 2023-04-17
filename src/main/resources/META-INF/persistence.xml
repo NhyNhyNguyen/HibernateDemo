@@ -5,5 +5,14 @@
              version="3.0">
     <persistence-unit name="default">
 
+        <class>com.example.demo.entities.CustomersEntity</class>
+        <class>com.example.demo.entities.OrdersEntity</class>
+        <class>com.example.demo.entities.Test</class>
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+            <property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver"/>
+            <property name="hibernate.connection.username" value="DEMO"/>
+            <property name="hibernate.connection.password" value="123$%^"/>
+        </properties>
     </persistence-unit>
 </persistence>

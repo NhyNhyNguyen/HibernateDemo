@@ -8,15 +8,16 @@ import java.util.Objects;
 @Entity
 @Table(name = "CUSTOMERS", schema = "DEMO", catalog = "")
 public class CustomersEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID", nullable = false, precision = 0)
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CUSTOMER_SEQ")
+    @SequenceGenerator(name = "CUSTOMER_SEQ", sequenceName = "CUSTOMER_SEQ", allocationSize = 1, initialValue = 1)
     private long id;
     @Basic
-    @Column(name = "ADDRESS", nullable = false, length = 255)
+    @Column(name = "ADDRESS", nullable = true, length = 255)
     private String address;
     @Basic
-    @Column(name = "BIRTHDAY", nullable = false)
+    @Column(name = "BIRTHDAY", nullable = true)
     private Date birthday;
     @Basic
     @Column(name = "CUSTOMER_TYPE", nullable = true, precision = 0)
@@ -25,7 +26,7 @@ public class CustomersEntity {
     @Column(name = "DOCUMENTS", nullable = true, length = 255)
     private String documents;
     @Basic
-    @Column(name = "EMAIL", nullable = false, length = 255)
+    @Column(name = "EMAIL", nullable = true, length = 255)
     private String email;
     @Basic
     @Column(name = "FILE_NAME", nullable = true, length = 255)
@@ -34,10 +35,10 @@ public class CustomersEntity {
     @Column(name = "GENDER", nullable = true, precision = 0)
     private Boolean gender;
     @Basic
-    @Column(name = "NAME", nullable = false, length = 255)
+    @Column(name = "NAME", nullable = true, length = 255)
     private String name;
     @Basic
-    @Column(name = "PHONE", nullable = false, length = 255)
+    @Column(name = "PHONE", nullable = true, length = 255)
     private String phone;
 
     public long getId() {
@@ -131,5 +132,21 @@ public class CustomersEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, address, birthday, customerType, documents, email, fileName, gender, name, phone);
+    }
+
+    @Override
+    public String toString() {
+        return "CustomersEntity{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", birthday=" + birthday +
+                ", customerType=" + customerType +
+                ", documents='" + documents + '\'' +
+                ", email='" + email + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", gender=" + gender +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
     }
 }
