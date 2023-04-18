@@ -1,6 +1,8 @@
 package com.example.demo.config;
 
 import com.example.demo.entities.CustomersEntity;
+import com.example.demo.entities.oneToMany.Answer;
+import com.example.demo.entities.oneToMany.Question;
 import com.example.demo.entities.tableHierachy.TPH_Employee;
 import com.example.demo.entities.tableHierachy.TPH_Person;
 import com.example.demo.entities.tablePerConcret.TPCEmployee;
@@ -18,6 +20,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 
@@ -47,6 +50,9 @@ public class HibernateUtil {
         configure.addAnnotatedClass(TPH_Person.class);
         configure.addAnnotatedClass(TPS_Employee.class);
         configure.addAnnotatedClass(TPS_Person.class);
+        configure.addAnnotatedClass(Answer.class);
+        configure.addAnnotatedClass(Question.class);
+        configure.addAnnotatedClass(TPS_Person.class);
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
@@ -66,7 +72,7 @@ public class HibernateUtil {
     }
 
     public static void main(String[] args) {
-        testTPS();
+        testOneToMany();
     }
 
     public static void testTPC(){
@@ -115,5 +121,44 @@ public class HibernateUtil {
 
         abstractRepository.save(person);
         abstractRepository.save(employee);
+    }
+    
+    public static void testOneToMany(){
+        AbstractRepository abstractRepository = new AbstractRepository();
+
+        Answer ans1=new Answer();
+        ans1.setAnswerName("Java is a programming language");
+        ans1.setPostedBy("Ravi Malik");
+
+        Answer ans2=new Answer();
+        ans2.setAnswerName("Java is a platform");
+        ans2.setPostedBy("Sudhir Kumar");
+
+        Answer ans3=new Answer();
+        ans3.setAnswerName("Servlet is an Interface");
+        ans3.setPostedBy("Jai Kumar");
+
+        Answer ans4=new Answer();
+        ans4.setAnswerName("Servlet is an API");
+        ans4.setPostedBy("Arun");
+
+        ArrayList<Answer> list1=new ArrayList<Answer>();
+        list1.add(ans1);
+        list1.add(ans2);
+
+        ArrayList<Answer> list2=new ArrayList<Answer>();
+        list2.add(ans3);
+        list2.add(ans4);
+
+        Question question1=new Question();
+        question1.setQuestionName("What is Java?");
+        question1.setAnswers(list1);
+
+        Question question2=new Question();
+        question2.setQuestionName("What is Servlet?");
+        question2.setAnswers(list2);
+
+        abstractRepository.save(question1);
+        abstractRepository.save(question2);
     }
 }
