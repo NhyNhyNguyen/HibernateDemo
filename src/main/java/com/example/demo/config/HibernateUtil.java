@@ -3,6 +3,8 @@ package com.example.demo.config;
 import com.example.demo.entities.CustomersEntity;
 import com.example.demo.entities.oneToMany.Answer;
 import com.example.demo.entities.oneToMany.Question;
+import com.example.demo.entities.oneToOne.Foreign_Customer;
+import com.example.demo.entities.oneToOne.Foreign_CustomerRecord;
 import com.example.demo.entities.tableHierachy.TPH_Employee;
 import com.example.demo.entities.tableHierachy.TPH_Person;
 import com.example.demo.entities.tablePerConcret.TPCEmployee;
@@ -22,6 +24,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Random;
 
 
 public class HibernateUtil {
@@ -53,6 +56,8 @@ public class HibernateUtil {
         configure.addAnnotatedClass(Answer.class);
         configure.addAnnotatedClass(Question.class);
         configure.addAnnotatedClass(TPS_Person.class);
+        configure.addAnnotatedClass(Foreign_Customer.class);
+        configure.addAnnotatedClass(Foreign_CustomerRecord.class);
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
@@ -72,10 +77,20 @@ public class HibernateUtil {
     }
 
     public static void main(String[] args) {
-        testOneToMany();
+        testOneToOne();
     }
 
-    public static void testTPC(){
+    private static void testOneToOne() {
+        AbstractRepository abstractRepository = new AbstractRepository();
+        Foreign_CustomerRecord customerRecord = new Foreign_CustomerRecord();
+        customerRecord.setId((new Random().nextLong()));
+        Foreign_Customer customer = new Foreign_Customer();
+        customer.setCustomerRecord(customerRecord);
+
+        abstractRepository.save(customer);
+    }
+
+    public static void testTPC() {
         AbstractRepository abstractRepository = new AbstractRepository();
 
         TPCPerson TPCPerson = new TPCPerson();
@@ -91,7 +106,7 @@ public class HibernateUtil {
         abstractRepository.save(TPCPerson);
     }
 
-    public static void testTPH(){
+    public static void testTPH() {
         AbstractRepository abstractRepository = new AbstractRepository();
 
         TPH_Person person = new TPH_Person();
@@ -107,7 +122,7 @@ public class HibernateUtil {
         abstractRepository.save(employee);
     }
 
-    public static void testTPS(){
+    public static void testTPS() {
         AbstractRepository abstractRepository = new AbstractRepository();
 
         TPS_Person person = new TPS_Person();
@@ -122,39 +137,39 @@ public class HibernateUtil {
         abstractRepository.save(person);
         abstractRepository.save(employee);
     }
-    
-    public static void testOneToMany(){
+
+    public static void testOneToMany() {
         AbstractRepository abstractRepository = new AbstractRepository();
 
-        Answer ans1=new Answer();
+        Answer ans1 = new Answer();
         ans1.setAnswerName("Java is a programming language");
         ans1.setPostedBy("Ravi Malik");
 
-        Answer ans2=new Answer();
+        Answer ans2 = new Answer();
         ans2.setAnswerName("Java is a platform");
         ans2.setPostedBy("Sudhir Kumar");
 
-        Answer ans3=new Answer();
+        Answer ans3 = new Answer();
         ans3.setAnswerName("Servlet is an Interface");
         ans3.setPostedBy("Jai Kumar");
 
-        Answer ans4=new Answer();
+        Answer ans4 = new Answer();
         ans4.setAnswerName("Servlet is an API");
         ans4.setPostedBy("Arun");
 
-        ArrayList<Answer> list1=new ArrayList<Answer>();
+        ArrayList<Answer> list1 = new ArrayList<Answer>();
         list1.add(ans1);
         list1.add(ans2);
 
-        ArrayList<Answer> list2=new ArrayList<Answer>();
+        ArrayList<Answer> list2 = new ArrayList<Answer>();
         list2.add(ans3);
         list2.add(ans4);
 
-        Question question1=new Question();
+        Question question1 = new Question();
         question1.setQuestionName("What is Java?");
         question1.setAnswers(list1);
 
-        Question question2=new Question();
+        Question question2 = new Question();
         question2.setQuestionName("What is Servlet?");
         question2.setAnswers(list2);
 

@@ -8,7 +8,16 @@ import java.util.List;
 @Table(name = "question")
 public class Question {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "QUESTION_SEQ"
+    )
+    @SequenceGenerator(
+            name = "QUESTION_SEQ",
+            sequenceName = "QUESTION_SEQ",
+            allocationSize = 1,
+            initialValue = 1000
+    )
     private int id;
 
     @OneToMany(cascade = CascadeType.ALL)

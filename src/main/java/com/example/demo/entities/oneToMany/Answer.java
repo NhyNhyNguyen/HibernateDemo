@@ -7,7 +7,16 @@ import jakarta.persistence.*;
 public class Answer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "ANSWER_SEQ"
+    )
+    @SequenceGenerator(
+            name = "ANSWER_SEQ",
+            sequenceName = "ANSWER_SEQ",
+            allocationSize = 1,
+            initialValue = 1000
+    )
     private int id;
     private String answerName;
     private String postedBy;
