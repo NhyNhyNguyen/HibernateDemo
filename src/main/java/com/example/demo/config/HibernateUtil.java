@@ -83,7 +83,6 @@ public class HibernateUtil {
     private static void testOneToOne() {
         AbstractRepository abstractRepository = new AbstractRepository();
         Foreign_CustomerRecord customerRecord = new Foreign_CustomerRecord();
-        customerRecord.setId((new Random().nextLong()));
         Foreign_Customer customer = new Foreign_Customer();
         customer.setCustomerRecord(customerRecord);
 

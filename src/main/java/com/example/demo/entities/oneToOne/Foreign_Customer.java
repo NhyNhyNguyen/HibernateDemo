@@ -9,11 +9,12 @@ public class Foreign_Customer {
     @Setter
     @Getter
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Setter
     @Getter
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "CUSREC_ID", unique = true, nullable = false, updatable = false)
     private Foreign_CustomerRecord customerRecord;
 
