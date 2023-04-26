@@ -5,6 +5,8 @@ import com.example.demo.entities.oneToMany.Answer;
 import com.example.demo.entities.oneToMany.Question;
 import com.example.demo.entities.oneToOne.Foreign_Customer;
 import com.example.demo.entities.oneToOne.Foreign_CustomerRecord;
+import com.example.demo.entities.oneToOne.PrimaryKey_Employee;
+import com.example.demo.entities.oneToOne.PrimaryKey_EmployeeInfo;
 import com.example.demo.entities.tableHierachy.TPH_Employee;
 import com.example.demo.entities.tableHierachy.TPH_Person;
 import com.example.demo.entities.tablePerConcret.TPCEmployee;
@@ -24,7 +26,6 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.Random;
 
 
 public class HibernateUtil {
@@ -58,6 +59,9 @@ public class HibernateUtil {
         configure.addAnnotatedClass(TPS_Person.class);
         configure.addAnnotatedClass(Foreign_Customer.class);
         configure.addAnnotatedClass(Foreign_CustomerRecord.class);
+        configure.addAnnotatedClass(PrimaryKey_EmployeeInfo.class);
+        configure.addAnnotatedClass(PrimaryKey_Employee.class);
+
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
@@ -77,16 +81,24 @@ public class HibernateUtil {
     }
 
     public static void main(String[] args) {
-        testOneToOne();
+        AbstractRepository abstractRepository = new AbstractRepository();
+        testOneToOneWithPrimaryKey(abstractRepository);
     }
 
-    private static void testOneToOne() {
-        AbstractRepository abstractRepository = new AbstractRepository();
+    private static void testOneToOneWithForeignKey(AbstractRepository abstractRepository) {
         Foreign_CustomerRecord customerRecord = new Foreign_CustomerRecord();
         Foreign_Customer customer = new Foreign_Customer();
         customer.setCustomerRecord(customerRecord);
 
         abstractRepository.save(customer);
+    }
+
+    private static void testOneToOneWithPrimaryKey(AbstractRepository abstractRepository) {
+        PrimaryKey_Employee employee = new PrimaryKey_Employee();
+        PrimaryKey_EmployeeInfo employeeInfo = new PrimaryKey_EmployeeInfo();
+        employee.setEmployeeInfo(employeeInfo);
+
+        abstractRepository.save(employee);
     }
 
     public static void testTPC() {
