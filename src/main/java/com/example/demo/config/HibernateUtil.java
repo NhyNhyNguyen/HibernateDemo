@@ -3,10 +3,7 @@ package com.example.demo.config;
 import com.example.demo.entities.CustomersEntity;
 import com.example.demo.entities.oneToMany.Answer;
 import com.example.demo.entities.oneToMany.Question;
-import com.example.demo.entities.oneToOne.Foreign_Customer;
-import com.example.demo.entities.oneToOne.Foreign_CustomerRecord;
-import com.example.demo.entities.oneToOne.PrimaryKey_Employee;
-import com.example.demo.entities.oneToOne.PrimaryKey_EmployeeInfo;
+import com.example.demo.entities.oneToOne.*;
 import com.example.demo.entities.tableHierachy.TPH_Employee;
 import com.example.demo.entities.tableHierachy.TPH_Person;
 import com.example.demo.entities.tablePerConcret.TPCEmployee;
@@ -61,7 +58,9 @@ public class HibernateUtil {
         configure.addAnnotatedClass(Foreign_CustomerRecord.class);
         configure.addAnnotatedClass(PrimaryKey_EmployeeInfo.class);
         configure.addAnnotatedClass(PrimaryKey_Employee.class);
-
+        configure.addAnnotatedClass(Embedded_Location.class);
+        configure.addAnnotatedClass(Embedded_Employee.class);
+        configure.addAnnotatedClass(Embedded_ParkingSlot.class);
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
@@ -82,7 +81,7 @@ public class HibernateUtil {
 
     public static void main(String[] args) {
         AbstractRepository abstractRepository = new AbstractRepository();
-        testOneToOneWithPrimaryKey(abstractRepository);
+        testOneToOneWithEmbedded(abstractRepository);
     }
 
     private static void testOneToOneWithForeignKey(AbstractRepository abstractRepository) {
@@ -99,6 +98,27 @@ public class HibernateUtil {
         employee.setEmployeeInfo(employeeInfo);
 
         abstractRepository.save(employee);
+    }
+
+    private static void testOneToOneWithEmbedded(AbstractRepository abstractRepository) {
+        Embedded_Employee employee = new Embedded_Employee();
+        Embedded_Location location = new Embedded_Location();
+        Embedded_ParkingSlot parkingSlot = new Embedded_ParkingSlot();
+        parkingSlot.setGarageId(1L);
+
+        location.setParkingSlot(parkingSlot);
+        location.setLocation("Location");
+        location.setParkingSlot(parkingSlot);
+
+        employee.setLocation(location);
+
+        abstractRepository.save(parkingSlot);
+        abstractRepository.save(employee);
+
+        //todo find packing lot
+        employee = (Embedded_Employee) abstractRepository.findById(Embedded_Employee.class, employee.getId());
+        parkingSlot = (Embedded_ParkingSlot) abstractRepository.findById(Embedded_ParkingSlot.class, parkingSlot.getId());
+        System.out.println(parkingSlot);
     }
 
     public static void testTPC() {
