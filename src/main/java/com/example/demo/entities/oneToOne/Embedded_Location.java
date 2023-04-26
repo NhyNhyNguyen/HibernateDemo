@@ -1,5 +1,6 @@
 package com.example.demo.entities.oneToOne;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -12,6 +13,6 @@ public class Embedded_Location {
 
     private String location;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Embedded_ParkingSlot parkingSlot;
 }

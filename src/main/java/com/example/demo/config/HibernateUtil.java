@@ -58,6 +58,8 @@ public class HibernateUtil {
         configure.addAnnotatedClass(Foreign_CustomerRecord.class);
         configure.addAnnotatedClass(PrimaryKey_EmployeeInfo.class);
         configure.addAnnotatedClass(PrimaryKey_Employee.class);
+        configure.addAnnotatedClass(PrimaryKey_Employee2.class);
+        configure.addAnnotatedClass(PrimaryKey_EmployeeInfo2.class);
         configure.addAnnotatedClass(Embedded_Location.class);
         configure.addAnnotatedClass(Embedded_Employee.class);
         configure.addAnnotatedClass(Embedded_ParkingSlot.class);
@@ -81,7 +83,8 @@ public class HibernateUtil {
 
     public static void main(String[] args) {
         AbstractRepository abstractRepository = new AbstractRepository();
-        testOneToOneWithEmbedded(abstractRepository);
+        testOneToOneWithPrimaryKey(abstractRepository);
+        testOneToOneWithPrimaryKey2(abstractRepository);
     }
 
     private static void testOneToOneWithForeignKey(AbstractRepository abstractRepository) {
@@ -92,11 +95,26 @@ public class HibernateUtil {
         abstractRepository.save(customer);
     }
 
+    /**
+     * Create one-to-one relation with primary key
+     *
+     * @param abstractRepository
+     */
     private static void testOneToOneWithPrimaryKey(AbstractRepository abstractRepository) {
         PrimaryKey_Employee employee = new PrimaryKey_Employee();
         PrimaryKey_EmployeeInfo employeeInfo = new PrimaryKey_EmployeeInfo();
         employee.setEmployeeInfo(employeeInfo);
 
+        abstractRepository.save(employee);
+    }
+
+    private static void testOneToOneWithPrimaryKey2(AbstractRepository abstractRepository) {
+        PrimaryKey_Employee2 employee = new PrimaryKey_Employee2();
+        PrimaryKey_EmployeeInfo2 employeeInfo = new PrimaryKey_EmployeeInfo2();
+        employee.setEmployeeInfo(employeeInfo);
+
+        employee.setId(1111L);
+        employeeInfo.setId(1111L);
         abstractRepository.save(employee);
     }
 
@@ -112,6 +130,7 @@ public class HibernateUtil {
 
         employee.setLocation(location);
 
+        //if don't have cascade need to save parkingSlot before, if it have it will auto save
         abstractRepository.save(parkingSlot);
         abstractRepository.save(employee);
 
