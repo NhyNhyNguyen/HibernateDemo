@@ -11,6 +11,8 @@ import com.example.demo.entities.OrdersEntity;
 import com.example.demo.entities.tablePerConcret.TPCPerson;
 import com.example.demo.entities.tablePerSubClass.TPS_Employee;
 import com.example.demo.entities.tablePerSubClass.TPS_Person;
+import com.example.demo.enver.ExampleListener;
+import com.example.demo.enver.ExampleRevEntity;
 import com.example.demo.repositories.AbstractRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -24,7 +26,7 @@ import org.hibernate.service.ServiceRegistry;
 import java.util.ArrayList;
 import java.util.Properties;
 
-
+@SuppressWarnings("all")
 public class HibernateUtil {
     /**
      * Connect throught java code
@@ -40,7 +42,8 @@ public class HibernateUtil {
         settings.put(Environment.USER, "DEMO");
         settings.put(Environment.PASS, "123$%^");
         settings.put(Environment.HBM2DDL_AUTO, "update");
-
+        settings.put("hibernate.listeners.envers.autoRegister", true); //default
+        settings.put("hibernate.envers.autoRegisterListeners", true); //default
         configure.setProperties(settings);
 
         configure.addAnnotatedClass(CustomersEntity.class);
@@ -63,6 +66,9 @@ public class HibernateUtil {
         configure.addAnnotatedClass(Embedded_Location.class);
         configure.addAnnotatedClass(Embedded_Employee.class);
         configure.addAnnotatedClass(Embedded_ParkingSlot.class);
+        configure.addAnnotatedClass(ExampleRevEntity.class);
+        configure.addAnnotatedClass(ExampleListener.class);
+
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
