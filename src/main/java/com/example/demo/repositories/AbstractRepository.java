@@ -16,4 +16,12 @@ public class AbstractRepository<T, ID> {
         entityManager.getTransaction().commit();
         return t;
     }
+
+    public T merge(T t) {
+        EntityManager entityManager = HibernateUtil.getEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(t);
+        entityManager.getTransaction().commit();
+        return t;
+    }
 }

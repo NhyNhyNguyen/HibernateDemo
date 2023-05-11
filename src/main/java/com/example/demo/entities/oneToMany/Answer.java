@@ -1,9 +1,11 @@
 package com.example.demo.entities.oneToMany;
 
 import jakarta.persistence.*;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Table(name = "answer")
+@Audited
 public class Answer {
 
     @Id

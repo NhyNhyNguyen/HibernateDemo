@@ -83,8 +83,7 @@ public class HibernateUtil {
 
     public static void main(String[] args) {
         AbstractRepository abstractRepository = new AbstractRepository();
-        testOneToOneWithPrimaryKey(abstractRepository);
-        testOneToOneWithPrimaryKey2(abstractRepository);
+        testOneToMany();
     }
 
     private static void testOneToOneWithForeignKey(AbstractRepository abstractRepository) {
@@ -225,5 +224,9 @@ public class HibernateUtil {
 
         abstractRepository.save(question1);
         abstractRepository.save(question2);
+
+        question1.getAnswers().get(0).setAnswerName("aaaaaaaaaaa");
+        abstractRepository.merge(question1.getAnswers().get(0));
+
     }
 }
