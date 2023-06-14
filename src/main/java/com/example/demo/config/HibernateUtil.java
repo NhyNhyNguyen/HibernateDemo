@@ -98,19 +98,22 @@ public class HibernateUtil {
     private static void testOptimisticError(AbstractRepository abstractRepository){
         OptimisticError error = new OptimisticError();
         error.setName("Nhi");
-
         abstractRepository.save(error);
-
         System.out.println("Object in first save" + error.toString());
+
         error = (OptimisticError) abstractRepository.findById(OptimisticError.class, error.getId());
+        //Nhi - Version: 0
         System.out.println("Object in get after first save" + error.toString());
+
         error.setName("Nhi 2");
         abstractRepository.merge(error);
         System.out.println("Object in get update" + error.toString());
+
         error = (OptimisticError) abstractRepository.findById(OptimisticError.class, error.getId());
         System.out.println("Object in get after update" + error.toString());
         error.setName("Nhi 3");
-        //set different version => throw error
+
+        //set different version => throw error, same version -> pass
         error.setVersion(error.getVersion() - 1);
         abstractRepository.merge(error);
         System.out.println("Object in get after update version" + error.toString());

@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 import com.example.demo.config.HibernateUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 public class AbstractRepository<T, ID> {
 
