@@ -1,10 +1,14 @@
 package com.example.demo.entities.oneToMany;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 
 @Entity
 @Table(name = "answer")
+@Getter
+@Setter
 @Audited
 public class Answer {
 
@@ -23,6 +27,8 @@ public class Answer {
     private String answerName;
     private String postedBy;
 
+    private Boolean test;
+
     public Answer() {
     }
 
@@ -32,27 +38,4 @@ public class Answer {
         this.postedBy = postedBy;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getAnswerName() {
-        return answerName;
-    }
-
-    public void setAnswerName(String answerName) {
-        this.answerName = answerName;
-    }
-
-    public String getPostedBy() {
-        return postedBy;
-    }
-
-    public void setPostedBy(String postedBy) {
-        this.postedBy = postedBy;
-    }
 }

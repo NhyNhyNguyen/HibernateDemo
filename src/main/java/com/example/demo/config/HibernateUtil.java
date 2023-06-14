@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.entities.CustomersEntity;
+import com.example.demo.entities.OptimisticError;
 import com.example.demo.entities.oneToMany.Answer;
 import com.example.demo.entities.oneToMany.Question;
 import com.example.demo.entities.oneToOne.*;
@@ -25,6 +26,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Random;
 
 @SuppressWarnings("all")
 public class HibernateUtil {
@@ -68,6 +70,7 @@ public class HibernateUtil {
         configure.addAnnotatedClass(Embedded_ParkingSlot.class);
         configure.addAnnotatedClass(ExampleRevEntity.class);
         configure.addAnnotatedClass(ExampleListener.class);
+        configure.addAnnotatedClass(OptimisticError.class);
 
         SessionFactory entityManagerFactory;
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
@@ -89,7 +92,29 @@ public class HibernateUtil {
 
     public static void main(String[] args) {
         AbstractRepository abstractRepository = new AbstractRepository();
-        testOneToMany();
+        testOptimisticError(abstractRepository);
+    }
+
+    private static void testOptimisticError(AbstractRepository abstractRepository){
+        OptimisticError error = new OptimisticError();
+        error.setName("Nhi");
+
+        abstractRepository.save(error);
+
+        System.out.println("Object in first save" + error.toString());
+        error = (OptimisticError) abstractRepository.findById(OptimisticError.class, error.getId());
+        System.out.println("Object in get after first save" + error.toString());
+        error.setName("Nhi 2");
+        abstractRepository.merge(error);
+        System.out.println("Object in get update" + error.toString());
+        error = (OptimisticError) abstractRepository.findById(OptimisticError.class, error.getId());
+        System.out.println("Object in get after update" + error.toString());
+        error.setName("Nhi 3");
+        //set different version => throw error
+        error.setVersion(error.getVersion() - 1);
+        abstractRepository.merge(error);
+        System.out.println("Object in get after update version" + error.toString());
+
     }
 
     private static void testOneToOneWithForeignKey(AbstractRepository abstractRepository) {
