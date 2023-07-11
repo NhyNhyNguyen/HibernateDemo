@@ -18,6 +18,7 @@ import com.example.demo.repositories.AbstractRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -30,54 +31,56 @@ import java.util.Random;
 
 @SuppressWarnings("all")
 public class HibernateUtil {
+    public static SessionFactory sessionFactory;
+
     /**
      * Connect throught java code
      *
      * @return
      */
     public static EntityManager getEntityManager() {
+        if (sessionFactory == null) {
+            Configuration configure = new Configuration();
+            Properties settings = new Properties();
+            settings.put(Environment.DRIVER, "oracle.jdbc.OracleDriver");
+            settings.put(Environment.URL, "jdbc:oracle:thin:@localhost:1521:XE");
+            settings.put(Environment.USER, "DEMO");
+            settings.put(Environment.PASS, "123$%^");
+            settings.put(Environment.HBM2DDL_AUTO, "update");
+            settings.put("hibernate.listeners.envers.autoRegister", true); //default
+            settings.put("hibernate.envers.autoRegisterListeners", true); //default
+            configure.setProperties(settings);
 
-        Configuration configure = new Configuration();
-        Properties settings = new Properties();
-        settings.put(Environment.DRIVER, "oracle.jdbc.OracleDriver");
-        settings.put(Environment.URL, "jdbc:oracle:thin:@localhost:1521:XE");
-        settings.put(Environment.USER, "DEMO");
-        settings.put(Environment.PASS, "123$%^");
-        settings.put(Environment.HBM2DDL_AUTO, "update");
-        settings.put("hibernate.listeners.envers.autoRegister", true); //default
-        settings.put("hibernate.envers.autoRegisterListeners", true); //default
-        configure.setProperties(settings);
+            configure.addAnnotatedClass(CustomersEntity.class);
+            configure.addAnnotatedClass(OrdersEntity.class);
+            configure.addAnnotatedClass(TPCPerson.class);
+            configure.addAnnotatedClass(TPCEmployee.class);
+            configure.addAnnotatedClass(TPH_Employee.class);
+            configure.addAnnotatedClass(TPH_Person.class);
+            configure.addAnnotatedClass(TPS_Employee.class);
+            configure.addAnnotatedClass(TPS_Person.class);
+            configure.addAnnotatedClass(Answer.class);
+            configure.addAnnotatedClass(Question.class);
+            configure.addAnnotatedClass(TPS_Person.class);
+            configure.addAnnotatedClass(Foreign_Customer.class);
+            configure.addAnnotatedClass(Foreign_CustomerRecord.class);
+            configure.addAnnotatedClass(PrimaryKey_EmployeeInfo.class);
+            configure.addAnnotatedClass(PrimaryKey_Employee.class);
+            configure.addAnnotatedClass(PrimaryKey_Employee2.class);
+            configure.addAnnotatedClass(PrimaryKey_EmployeeInfo2.class);
+            configure.addAnnotatedClass(Embedded_Location.class);
+            configure.addAnnotatedClass(Embedded_Employee.class);
+            configure.addAnnotatedClass(Embedded_ParkingSlot.class);
+            configure.addAnnotatedClass(ExampleRevEntity.class);
+            configure.addAnnotatedClass(ExampleListener.class);
+            configure.addAnnotatedClass(OptimisticError.class);
 
-        configure.addAnnotatedClass(CustomersEntity.class);
-        configure.addAnnotatedClass(OrdersEntity.class);
-        configure.addAnnotatedClass(TPCPerson.class);
-        configure.addAnnotatedClass(TPCEmployee.class);
-        configure.addAnnotatedClass(TPH_Employee.class);
-        configure.addAnnotatedClass(TPH_Person.class);
-        configure.addAnnotatedClass(TPS_Employee.class);
-        configure.addAnnotatedClass(TPS_Person.class);
-        configure.addAnnotatedClass(Answer.class);
-        configure.addAnnotatedClass(Question.class);
-        configure.addAnnotatedClass(TPS_Person.class);
-        configure.addAnnotatedClass(Foreign_Customer.class);
-        configure.addAnnotatedClass(Foreign_CustomerRecord.class);
-        configure.addAnnotatedClass(PrimaryKey_EmployeeInfo.class);
-        configure.addAnnotatedClass(PrimaryKey_Employee.class);
-        configure.addAnnotatedClass(PrimaryKey_Employee2.class);
-        configure.addAnnotatedClass(PrimaryKey_EmployeeInfo2.class);
-        configure.addAnnotatedClass(Embedded_Location.class);
-        configure.addAnnotatedClass(Embedded_Employee.class);
-        configure.addAnnotatedClass(Embedded_ParkingSlot.class);
-        configure.addAnnotatedClass(ExampleRevEntity.class);
-        configure.addAnnotatedClass(ExampleListener.class);
-        configure.addAnnotatedClass(OptimisticError.class);
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
-        SessionFactory entityManagerFactory;
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
+            sessionFactory = configure.buildSessionFactory(serviceRegistry);
+        }
 
-        entityManagerFactory = configure.buildSessionFactory(serviceRegistry);
-
-        return entityManagerFactory.createEntityManager();
+        return sessionFactory.createEntityManager();
     }
 
     /**
@@ -95,7 +98,7 @@ public class HibernateUtil {
         testOptimisticError(abstractRepository);
     }
 
-    private static void testOptimisticError(AbstractRepository abstractRepository){
+    private static void testOptimisticError(AbstractRepository abstractRepository) {
         OptimisticError error = new OptimisticError();
         error.setName("Nhi");
         abstractRepository.save(error);
@@ -106,6 +109,7 @@ public class HibernateUtil {
         System.out.println("Object in get after first save" + error.toString());
 
         error.setName("Nhi 2");
+        error.setVersion(10);
         abstractRepository.merge(error);
         System.out.println("Object in get update" + error.toString());
 
@@ -114,9 +118,21 @@ public class HibernateUtil {
         error.setName("Nhi 3");
 
         //set different version => throw error, same version -> pass
-        error.setVersion(error.getVersion() - 1);
+        error.setVersion(error.getVersion());
         abstractRepository.merge(error);
         System.out.println("Object in get after update version" + error.toString());
+
+    }
+
+    private static void testOptimisticError2(AbstractRepository abstractRepository) {
+        Session session = sessionFactory.openSession();
+        OptimisticError error = new OptimisticError();
+        error.setName("Nhi");
+        session.beginTransaction();
+        session.save(error);
+        session.getTransaction().commit();
+        session.flush();
+        session.close();
 
     }
 

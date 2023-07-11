@@ -11,7 +11,7 @@ public class AbstractRepository<T, ID> {
     }
 
     public T save(T t) {
-        EntityManager entityManager = HibernateUtil.getEntityManager();
+        EntityManager entityManager = HibernateUtil.sessionFactory.openSession();
         entityManager.getTransaction().begin();
         entityManager.persist(t);
         entityManager.getTransaction().commit();
@@ -19,7 +19,7 @@ public class AbstractRepository<T, ID> {
     }
 
     public T merge(T t) {
-        EntityManager entityManager = HibernateUtil.getEntityManager();
+        EntityManager entityManager = HibernateUtil.sessionFactory.openSession();
         entityManager.getTransaction().begin();
         entityManager.merge(t);
         entityManager.getTransaction().commit();
