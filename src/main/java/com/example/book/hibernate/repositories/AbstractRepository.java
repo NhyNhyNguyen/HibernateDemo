@@ -1,8 +1,7 @@
-package com.example.demo.repositories;
+package com.example.book.hibernate.repositories;
 
-import com.example.demo.config.HibernateUtil;
+import com.example.book.hibernate.config.HibernateUtil;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 
 public class AbstractRepository<T, ID> {
 
@@ -11,7 +10,7 @@ public class AbstractRepository<T, ID> {
     }
 
     public T save(T t) {
-        EntityManager entityManager = HibernateUtil.getEntityManager();
+        EntityManager entityManager = HibernateUtil.sessionFactory.openSession();
         entityManager.getTransaction().begin();
         entityManager.persist(t);
         entityManager.getTransaction().commit();
@@ -19,12 +18,9 @@ public class AbstractRepository<T, ID> {
     }
 
     public T merge(T t) {
-        EntityManager entityManager = HibernateUtil.getEntityManager();
-        EntityManager entityManager2 = HibernateUtil.getEntityManager();
+        EntityManager entityManager = HibernateUtil.sessionFactory.openSession();
         entityManager.getTransaction().begin();
-        entityManager2.getTransaction().begin();
-        entityManager2.merge(t);
-        entityManager2.getTransaction().commit();
+        entityManager.merge(t);
         entityManager.getTransaction().commit();
         return t;
     }
