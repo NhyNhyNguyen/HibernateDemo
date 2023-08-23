@@ -1,6 +1,7 @@
 package com.example.book.hibernate.config;
 
 import com.example.book.hibernate.entities.Message;
+import com.example.book.hibernate.entities.Test;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -18,6 +19,10 @@ import java.util.List;
 public class HibernateUtil {
     public static SessionFactory sessionFactory;
 
+    {
+        getEntityManager();
+    }
+
     /**
      * Connect throught java code
      *
@@ -29,6 +34,7 @@ public class HibernateUtil {
             configure.setProperties(System.getProperties());
             //different with addClass() and addAnnotatedClass()
             configure.addAnnotatedClass(Message.class);
+            configure.addAnnotatedClass(Test.class);
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configure.getProperties()).build();
 
